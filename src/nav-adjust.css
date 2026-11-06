@@ -1,5 +1,8 @@
 .top-more,.admin-quick{display:none}
 .note-actions{display:flex;gap:7px;flex-wrap:wrap}
+.modal-backdrop{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#123c327a}
+.download-modal{position:relative;width:min(100%,390px);display:grid;gap:14px;padding:22px;background:#f8f7f2}
+.download-modal h3{margin:0}.modal-close{position:absolute;right:10px;top:8px;background:transparent;color:#123c32;font-size:26px;line-height:1}.form-error{margin:0;color:#bd4238;font-size:13px;font-weight:600}
 @media (max-width:767px){
   header .brand{margin-right:auto}
   .top-more{display:block;position:absolute;right:18px;top:50%;transform:translateY(-50%);z-index:1;margin:0;padding:10px 0;background:transparent;color:#e7c982;font-size:12px;font-weight:700;letter-spacing:.2px}
