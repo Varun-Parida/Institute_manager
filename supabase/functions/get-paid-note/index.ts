@@ -19,15 +19,18 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { data: payment } = await admin
+    const { data: verifiedPayments, error: paymentError } = await admin
       .from('payments')
-      .select('id, download_used_at')
+      .select('id, name, student_name, download_used_at')
       .eq('kind', `Note: ${noteId}`)
-      .ilike('name', buyerName.trim())
       .eq('status', 'Verified')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+      .limit(100)
+
+    if (paymentError) throw paymentError
+    const wantedName = buyerName.trim().toLowerCase()
+    const payment = (verifiedPayments ?? []).find((row) =>
+      String(row.name ?? row.student_name ?? '').trim().toLowerCase() === wantedName
+    )
 
     if (!payment) {
       return Response.json({ verified: false, message: 'Payment is pending or could not be verified yet.' }, { headers: corsHeaders })
