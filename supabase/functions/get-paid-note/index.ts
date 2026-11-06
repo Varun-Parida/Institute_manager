@@ -10,8 +10,8 @@ Deno.serve(async (req) => {
 
   try {
     const { noteId, buyerName, transactionId, action = 'check' } = await req.json()
-    if (!noteId || !buyerName || !transactionId) {
-      return Response.json({ verified: false, message: 'Enter your name and transaction ID.' }, { headers: corsHeaders })
+    if (!noteId || !buyerName) {
+      return Response.json({ verified: false, message: 'Enter your username.' }, { headers: corsHeaders })
     }
 
     const admin = createClient(
@@ -24,8 +24,9 @@ Deno.serve(async (req) => {
       .select('id, download_used_at')
       .eq('kind', `Note: ${noteId}`)
       .ilike('name', buyerName.trim())
-      .eq('transaction_id', transactionId.trim())
       .eq('status', 'Verified')
+      .order('created_at', { ascending: false })
+      .limit(1)
       .maybeSingle()
 
     if (!payment) {
