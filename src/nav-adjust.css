@@ -1,4 +1,5 @@
 .top-more,.admin-quick{display:none}
+.admin-shortcuts{display:none}
 .note-actions{display:flex;gap:7px;flex-wrap:wrap}
 .modal-backdrop{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#123c327a}
 .verified-glow{position:fixed;inset:0;z-index:40;pointer-events:none;background:radial-gradient(circle at 50% 45%,#f7e5a866 0%,#c5a15a22 34%,transparent 70%);animation:verified-flash 1.5s ease-out}
@@ -34,5 +35,9 @@ button:not(:disabled):active{transform:scale(.97)}
   .admin-quick{display:grid;place-items:center;position:absolute;right:61px;top:50%;transform:translateY(-50%);z-index:1;width:30px;height:30px;padding:0;border:1px solid #ffffff38;border-radius:50%;background:#ffffff10;color:#dce9e2;font-size:16px;line-height:1}
   .admin-quick.enabled{border-color:#c5a15a;color:#e7c982;background:#c5a15a18}
   .mobile-bottom.admin-pulse{animation:admin-confirm 2s ease-out}
+  .admin-shortcuts{position:fixed;z-index:19;left:0;right:0;bottom:calc(68px + env(safe-area-inset-bottom));height:43px;display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:1px;padding:3px 8px;background:linear-gradient(90deg,#123c32,#176b55,#123c32);border-top:1px solid #c5a15a88;box-shadow:0 -5px 16px #123c3233}
+  .admin-shortcuts button{background:transparent;color:#f8f7f2;border:0;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:.15px}
+  .admin-shortcuts .attendance-shortcut{background:linear-gradient(135deg,#c5a15a,#e5c780);color:#123c32;box-shadow:0 0 12px #c5a15a99;animation:admin-shortcut-shine 2.5s ease-in-out infinite}
 }
 @keyframes admin-confirm{0%,100%{box-shadow:0 -5px 18px #123c3226,0 0 0 0 #c5a15a00}12%,78%{box-shadow:0 -7px 24px #123c3280,0 0 0 5px #c5a15acc,0 -3px 30px #c5a15aff,0 -3px 45px #176b55aa}}
+@keyframes admin-shortcut-shine{0%,100%{filter:brightness(1)}50%{filter:brightness(1.12);box-shadow:0 0 18px #c5a15acc}}
