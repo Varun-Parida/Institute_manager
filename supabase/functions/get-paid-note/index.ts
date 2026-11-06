@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
         .select('id')
         .maybeSingle()
       if (consumeError) throw consumeError
-      if (!consumed) return Response.json({ verified: false, message: 'This download was already used. Ask the faculty to allow one more download.' }, { headers: corsHeaders })
+      if (!consumed) return Response.json({ verified: false, message: 'Download limit reached. This note can only be downloaded once.' }, { headers: corsHeaders })
     }
 
     const { data: note } = await admin
