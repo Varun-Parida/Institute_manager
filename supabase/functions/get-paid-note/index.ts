@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    const { noteId, buyerName, transactionId } = await req.json()
+    const { noteId, buyerName, transactionId, action = 'check' } = await req.json()
     if (!noteId || !buyerName || !transactionId) {
       return Response.json({ verified: false, message: 'Enter your name and transaction ID.' }, { headers: corsHeaders })
     }
@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
 
     const { data: payment } = await admin
       .from('payments')
-      .select('id')
+      .select('id, download_used_at')
       .eq('kind', `Note: ${noteId}`)
       .ilike('name', buyerName.trim())
       .eq('transaction_id', transactionId.trim())
@@ -30,6 +30,18 @@ Deno.serve(async (req) => {
 
     if (!payment) {
       return Response.json({ verified: false, message: 'Payment is pending or could not be verified yet.' }, { headers: corsHeaders })
+    }
+
+    if (action === 'download') {
+      const { data: consumed, error: consumeError } = await admin
+        .from('payments')
+        .update({ download_used_at: new Date().toISOString() })
+        .eq('id', payment.id)
+        .is('download_used_at', null)
+        .select('id')
+        .maybeSingle()
+      if (consumeError) throw consumeError
+      if (!consumed) return Response.json({ verified: false, message: 'This download was already used. Ask the faculty to allow one more download.' }, { headers: corsHeaders })
     }
 
     const { data: note } = await admin
@@ -41,6 +53,10 @@ Deno.serve(async (req) => {
 
     if (!note?.file_path) {
       return Response.json({ verified: false, message: 'The note file is not available.' }, { headers: corsHeaders })
+    }
+
+    if (action !== 'download') {
+      return Response.json({ verified: true, message: 'Payment verified. You may download this note once.' }, { headers: corsHeaders })
     }
 
     const { data: signed, error } = await admin.storage
